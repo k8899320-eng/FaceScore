@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- овал лица -->
+    <path
+        android:pathData="M54,30 C66,30 74,40 74,53 C74,67 65,79 54,79 C43,79 34,67 34,53 C34,40 42,30 54,30 Z"
+        android:strokeColor="#FF7A59"
+        android:strokeWidth="4"
+        android:fillColor="#00000000" />
+    <!-- центральная ось -->
+    <path
+        android:pathData="M54,24 L54,85"
+        android:strokeColor="#F2EFF8"
+        android:strokeAlpha="0.5"
+        android:strokeWidth="1.5" />
+    <!-- глаза -->
+    <path android:pathData="M46,50 m-3.2,0 a3.2,3.2 0 1,0 6.4,0 a3.2,3.2 0 1,0 -6.4,0" android:fillColor="#7CD6C4" />
+    <path android:pathData="M62,50 m-3.2,0 a3.2,3.2 0 1,0 6.4,0 a3.2,3.2 0 1,0 -6.4,0" android:fillColor="#7CD6C4" />
+    <!-- линия глаз и рот -->
+    <path android:pathData="M46,50 L62,50" android:strokeColor="#7CD6C4" android:strokeWidth="1.5" />
+    <path android:pathData="M47,66 L61,66" android:strokeColor="#FF7A59" android:strokeWidth="3" android:strokeLineCap="round" />
+</vector>
