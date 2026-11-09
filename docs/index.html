@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ФейсСкор — оценка пропорций лица</title>
+<meta name="description" content="Сфоткайся — и приложение оценит симметрию и пропорции лица от 1 до 10.">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#14121a;color:#f2eff8;font-family:Manrope,system-ui,sans-serif;line-height:1.5}
+  .wrap{max-width:560px;margin:0 auto;padding:48px 20px 40px;text-align:center}
+  .icon{width:120px;height:120px;border-radius:28px;background:#1e1b27;border:1px solid #2e2a3b;display:inline-block}
+  h1{font-family:Unbounded,sans-serif;font-size:38px;margin:22px 0 6px;letter-spacing:-1px}
+  h1 span{color:#ff7a59}
+  .lead{color:#a29db3;font-size:17px;margin:0 0 30px}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:#ff7a59;color:#1a1210;text-decoration:none;
+       font-weight:600;font-size:18px;padding:17px 30px;border-radius:16px}
+  .btn:active{transform:scale(.98)}
+  .meta{color:#a29db3;font-size:13px;margin-top:12px}
+  .cards{display:grid;gap:12px;margin:40px 0;text-align:left}
+  .card{background:#1e1b27;border:1px solid #2e2a3b;border-radius:18px;padding:16px 18px}
+  .card b{display:block;margin-bottom:2px}
+  .card p{margin:0;color:#a29db3;font-size:14.5px}
+  h2{font-family:Unbounded,sans-serif;font-size:20px;margin:40px 0 14px}
+  ol{text-align:left;color:#a29db3;padding-left:22px;margin:0}
+  ol li{margin-bottom:8px}
+  ol b{color:#f2eff8}
+  footer{color:#6f6a80;font-size:12.5px;margin-top:44px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <svg class="icon" viewBox="0 0 108 108" aria-hidden="true">
+    <path d="M54 24V85" stroke="#f2eff8" stroke-opacity=".45" stroke-width="1.5"/>
+    <ellipse cx="54" cy="54.5" rx="20" ry="24.5" fill="none" stroke="#ff7a59" stroke-width="4"/>
+    <circle cx="46" cy="50" r="3.2" fill="#7cd6c4"/><circle cx="62" cy="50" r="3.2" fill="#7cd6c4"/>
+    <path d="M46 50H62" stroke="#7cd6c4" stroke-width="1.5"/>
+    <path d="M47 66H61" stroke="#ff7a59" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+
+  <h1>Фейс<span>Скор</span></h1>
+  <p class="lead">Сфоткайся — и приложение измерит симметрию и пропорции лица и поставит оценку от 1 до 10.</p>
+
+  <a class="btn" href="https://github.com/k8899320-eng/FaceScore/releases/latest/download/FaceScore.apk">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+    Скачать для Android
+  </a>
+  <div class="meta">Android 9 и новее · около 62 МБ · бесплатно</div>
+
+  <div class="cards">
+    <div class="card"><b>🤖 Само находит лицо</b><p>Нейросеть отмечает глаза, нос, рот и овал лица — ничего не нужно размечать вручную.</p></div>
+    <div class="card"><b>📐 Честный разбор</b><p>Симметрия и пропорции по ориентирам из исследований о привлекательности — с объяснением каждой цифры.</p></div>
+    <div class="card"><b>🔒 Фото не уходит в интернет</b><p>Всё считается прямо в телефоне. Никаких аккаунтов, рекламы и сбора данных.</p></div>
+  </div>
+
+  <h2>Как установить</h2>
+  <ol>
+    <li>Нажми <b>«Скачать для Android»</b> и дождись конца загрузки.</li>
+    <li>Открой файл <b>FaceScore.apk</b> в приложении «Файлы» → «Загрузки».</li>
+    <li>Если телефон спросит — разреши <b>установку из этого источника</b>.</li>
+    <li>Нажми <b>«Установить»</b>. Иконка ФейсСкор появится на главном экране.</li>
+  </ol>
+
+  <footer>Это игра, а не приговор: красоту каждый видит по-своему.</footer>
+</div>
+</body>
+</html>
