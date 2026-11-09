@@ -42,11 +42,12 @@
   <h1>Фейс<span>Скор</span></h1>
   <p class="lead">Сфоткайся — и приложение измерит симметрию и пропорции лица и поставит оценку от 1 до 10.</p>
 
-  <a class="btn" href="https://github.com/k8899320-eng/FaceScore/releases/latest/download/FaceScore.apk">
+  <a class="btn" id="dl" href="https://github.com/k8899320-eng/FaceScore/releases/latest/download/FaceScore.apk">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
-    Скачать для Android
+    <span id="dlText">Скачать</span>
   </a>
-  <div class="meta">Android 9 и новее · около 62 МБ · бесплатно</div>
+  <div class="meta" id="dlMeta">Android 9 и новее · около 62 МБ · бесплатно</div>
+  <div class="meta"><a href="app.html" style="color:#a29db3">Открыть в браузере без установки</a></div>
 
   <div class="cards">
     <div class="card"><b>🤖 Само находит лицо</b><p>Нейросеть отмечает глаза, нос, рот и овал лица — ничего не нужно размечать вручную.</p></div>
@@ -56,13 +57,29 @@
 
   <h2>Как установить</h2>
   <ol>
-    <li>Нажми <b>«Скачать для Android»</b> и дождись конца загрузки.</li>
+    <li>Нажми <b>«Скачать»</b> и дождись конца загрузки.</li>
     <li>Открой файл <b>FaceScore.apk</b> в приложении «Файлы» → «Загрузки».</li>
     <li>Если телефон спросит — разреши <b>установку из этого источника</b>.</li>
     <li>Нажми <b>«Установить»</b>. Иконка ФейсСкор появится на главном экране.</li>
   </ol>
 
+  <h2>Как поставить на iPhone</h2>
+  <ol>
+    <li>Открой эту страницу в <b>Safari</b> и нажми <b>«Открыть»</b>.</li>
+    <li>Внизу нажми <b>«Поделиться»</b> (квадрат со стрелкой вверх).</li>
+    <li>Выбери <b>«На экран „Домой“»</b> → <b>«Добавить»</b>.</li>
+    <li>ФейсСкор появится на экране как обычное приложение.</li>
+  </ol>
+
   <footer>Это игра, а не приговор: красоту каждый видит по-своему.</footer>
 </div>
+<script>
+  // Одна кнопка: на iPhone/iPad ведёт в веб-версию, на Android — скачивает APK
+  if (/iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) {
+    document.getElementById("dl").href = "app.html";
+    document.getElementById("dlText").textContent = "Открыть";
+    document.getElementById("dlMeta").textContent = "Для iPhone: откроется в Safari, потом «Поделиться» → «На экран „Домой“»";
+  }
+</script>
 </body>
 </html>
