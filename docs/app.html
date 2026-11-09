@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ФейсСкор">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#14121a">
+<title>ФейсСкор</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#14121a;--card:#1e1b27;--line:#2e2a3b;--text:#f2eff8;--muted:#a29db3;--accent:#ff7a59;--accent2:#7cd6c4;--bad:#ff5d73}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Manrope,system-ui,sans-serif;
+       padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 16px) env(safe-area-inset-left)}
+  .wrap{max-width:520px;margin:0 auto;padding:16px 20px}
+  h1{font-family:Unbounded,sans-serif;font-size:28px;margin:10px 0 6px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);font-size:15px;line-height:1.45;margin:0 0 18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+  .btn{display:flex;align-items:center;justify-content:center;width:100%;border:0;border-radius:14px;padding:16px;
+       font:600 16px Manrope,sans-serif;cursor:pointer;background:var(--accent);color:#1a1210}
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+  input[type=file]{display:none}
+  ul{margin:14px 0 0;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.7}
+  .hidden{display:none!important}
+  .center{text-align:center;padding:50px 0;color:var(--muted)}
+  .spin{width:38px;height:38px;border:4px solid var(--line);border-top-color:var(--accent);border-radius:50%;
+        margin:0 auto 14px;animation:s 1s linear infinite}
+  @keyframes s{to{transform:rotate(360deg)}}
+  .big{font-family:Unbounded,sans-serif;font-size:72px;font-weight:700;color:var(--accent);text-align:center;line-height:1.1}
+  .big small{font-size:24px;color:var(--muted)}
+  .verdict{text-align:center;color:var(--muted)}
+  .warn{color:var(--bad);font-size:14px;margin-top:12px;line-height:1.4}
+  .m{margin-top:16px}
+  .mh{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+  .mh b{font-weight:600}.mh span{color:var(--muted)}
+  .bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .mn{color:var(--muted);font-size:12px;margin-top:4px;line-height:1.35}
+  canvas{display:block;width:100%;border-radius:14px}
+  details summary{cursor:pointer;font-weight:600}
+  details p{color:var(--muted);font-size:13px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Фейс<span>Скор</span></h1>
+
+  <section id="home">
+    <p class="sub">Сфоткайся — и приложение измерит симметрию и пропорции лица по ориентирам из исследований о привлекательности. Фото обрабатывается прямо на телефоне и никуда не отправляется.</p>
+    <div class="card">
+      <label class="btn" for="cam">📸&nbsp; Сфоткаться</label>
+      <input id="cam" type="file" accept="image/*" capture="user">
+      <div style="height:10px"></div>
+      <label class="btn ghost" for="gal">🖼&nbsp; Выбрать из галереи</label>
+      <input id="gal" type="file" accept="image/*">
+      <ul>
+        <li>смотри прямо в камеру, голова ровно</li>
+        <li>камера на уровне глаз, не снизу</li>
+        <li>волосы убери со лба, очки сними</li>
+        <li>свет спереди, лицо целиком в кадре</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="loading" class="hidden">
+    <div class="center"><div class="spin"></div><div id="loadText">Измеряю пропорции…</div></div>
+  </section>
+
+  <section id="error" class="hidden">
+    <div class="card">
+      <p id="errText" style="margin:0 0 16px;line-height:1.45"></p>
+      <button class="btn" data-home>Попробовать ещё раз</button>
+    </div>
+  </section>
+
+  <section id="result" class="hidden">
+    <div class="card">
+      <div class="big" id="score"></div>
+      <div class="verdict" id="verdict"></div>
+      <div class="warn hidden" id="warn"></div>
+      <div id="metrics"></div>
+    </div>
+    <div class="card"><canvas id="cv"></canvas></div>
+    <button class="btn" data-home>Ещё фото</button>
+    <div style="height:14px"></div>
+    <div class="card">
+      <details>
+        <summary>Откуда берутся цифры</summary>
+        <p>Объективной «шкалы красоты» не существует — каждый видит её по-своему. Приложение измеряет признаки, которые в исследованиях чаще всего связывают с оценками привлекательности:</p>
+        <p>• Симметрия — насколько совпадают левая и правая половины лица.<br>
+        • «Новые золотые пропорции» (Pallett, Link, Lee, 2010, Vision Research): расстояние между зрачками ≈ 46% ширины лица, от глаз до рта ≈ 36% высоты лица.<br>
+        • Соотношение высоты и ширины лица и нижняя треть — классические каноны пропорций.<br>
+        • Ширина рта относительно расстояния между зрачками.</p>
+        <p>Результат сильно зависит от ракурса, света и камеры. Улыбка, причёска, стиль и харизма — то, что сильнее всего влияет на то, как тебя видят люди, — сюда не входят. Это игра, а не приговор.</p>
+      </details>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+const MP = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+const MODEL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
+
+const $ = id => document.getElementById(id);
+const show = id => { for (const s of ["home","loading","error","result"]) $(s).classList.toggle("hidden", s !== id); scrollTo(0,0); };
+const fail = msg => { $("errText").textContent = msg; show("error"); };
+document.querySelectorAll("[data-home]").forEach(b => b.onclick = () => show("home"));
+
+let landmarker = null;
+async function getLandmarker() {
+  if (landmarker) return landmarker;
+  $("loadText").textContent = "Загружаю нейросеть (только в первый раз)…";
+  const mod = await import(MP);
+  const api = mod.FaceLandmarker ? mod : mod.default;
+  const { FaceLandmarker, FilesetResolver } = api;
+  const fileset = await FilesetResolver.forVisionTasks(MP + "/wasm");
+  landmarker = await FaceLandmarker.createFromOptions(fileset, {
+    baseOptions: { modelAssetPath: MODEL, delegate: "CPU" },
+    runningMode: "IMAGE",
+    numFaces: 1
+  });
+  return landmarker;
+}
+
+function loadImage(file) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, 1400 / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * s);
+      c.height = Math.round(img.naturalHeight * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      res(c);
+    };
+    img.onerror = () => rej(new Error("bad image"));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function handle(file) {
+  if (!file) return;
+  show("loading");
+  $("loadText").textContent = "Измеряю пропорции…";
+  let canvas;
+  try { canvas = await loadImage(file); }
+  catch { return fail("Не получилось открыть фото. Попробуй другое."); }
+  let lm;
+  try { lm = await getLandmarker(); }
+  catch { return fail("Не получилось загрузить нейросеть. Проверь интернет и попробуй ещё раз."); }
+  $("loadText").textContent = "Измеряю пропорции…";
+  await new Promise(r => setTimeout(r, 30));
+  let res;
+  try { res = lm.detect(canvas); }
+  catch { return fail("Ошибка при распознавании. Попробуй другое фото."); }
+  const face = res.faceLandmarks && res.faceLandmarks[0];
+  if (!face || face.length < 478) return fail("Лицо не найдено. Сними крупнее, при хорошем свете и смотри прямо в камеру.");
+  const pts = face.map(p => ({ x: p.x * canvas.width, y: p.y * canvas.height }));
+  render(canvas, pts, evaluate(pts));
+}
+$("cam").onchange = e => { handle(e.target.files[0]); e.target.value = ""; };
+$("gal").onchange = e => { handle(e.target.files[0]); e.target.value = ""; };
+
+// Индексы точек сетки MediaPipe (478 точек)
+const I = { irisA: 468, irisB: 473, noseTip: 1, noseBase: 2, mouthA: 61, mouthB: 291, top: 10, chin: 152, left: 234, right: 454 };
+
+const closeness = (v, ideal, tol) => Math.exp(-(((v - ideal) / tol) ** 2));
+
+function evaluate(P) {
+  let [eL, eR] = [P[I.irisA], P[I.irisB]]; if (eL.x > eR.x) [eL, eR] = [eR, eL];
+  let [mL, mR] = [P[I.mouthA], P[I.mouthB]]; if (mL.x > mR.x) [mL, mR] = [mR, mL];
+  let [fL, fR] = [P[I.left], P[I.right]]; if (fL.x > fR.x) [fL, fR] = [fR, fL];
+
+  // Выравниваем лицо по линии глаз
+  const cx = (eL.x + eR.x) / 2, cy = (eL.y + eR.y) / 2;
+  const a = -Math.atan2(eR.y - eL.y, eR.x - eL.x), c = Math.cos(a), s = Math.sin(a);
+  const rot = p => ({ x: (p.x - cx) * c - (p.y - cy) * s, y: (p.x - cx) * s + (p.y - cy) * c });
+
+  const EL = rot(eL), ER = rot(eR), ML = rot(mL), MR = rot(mR), FL = rot(fL), FR = rot(fR);
+  const N = rot(P[I.noseBase]), NT = rot(P[I.noseTip]), T = rot(P[I.top]), C = rot(P[I.chin]);
+
+  const faceLen = C.y - T.y, faceW = FR.x - FL.x;
+  const eyeDist = Math.hypot(ER.x - EL.x, ER.y - EL.y);
+  const mouthW = Math.hypot(MR.x - ML.x, MR.y - ML.y);
+  const eyeY = (EL.y + ER.y) / 2, mouthY = (ML.y + MR.y) / 2;
+  const axis = (T.x + C.x) / 2;
+
+  const asym = [
+    Math.abs(Math.abs(EL.x - axis) - Math.abs(ER.x - axis)),
+    Math.abs(Math.abs(ML.x - axis) - Math.abs(MR.x - axis)),
+    Math.abs(Math.abs(FL.x - axis) - Math.abs(FR.x - axis)),
+    Math.abs(N.x - axis) * 1.5,
+    Math.abs(EL.y - ER.y),
+    Math.abs(ML.y - MR.y)
+  ].map(v => v / faceW);
+  const asymAvg = asym.reduce((x, y) => x + y, 0) / asym.length;
+
+  const r1 = eyeDist / faceW, r2 = (mouthY - eyeY) / faceLen, r3 = faceLen / faceW,
+        r4 = (C.y - N.y) / faceLen, r5 = mouthW / eyeDist;
+
+  const metrics = [
+    { n: "Симметрия", v: Math.round((1 - asymAvg) * 100) + "%", s: closeness(asymAvg, 0, 0.075), w: .30, t: "Насколько левая и правая половины лица совпадают." },
+    { n: "Глаза к ширине лица", v: Math.round(r1 * 100) + "%", s: closeness(r1, 0.46, 0.07), w: .18, t: "Расстояние между зрачками от ширины лица. Ориентир — около 46%." },
+    { n: "Глаза–рот к высоте лица", v: Math.round(r2 * 100) + "%", s: closeness(r2, 0.36, 0.06), w: .18, t: "Ориентир — около 36% высоты лица." },
+    { n: "Форма лица", v: r3.toFixed(2), s: closeness(r3, 1.45, 0.22), w: .12, t: "Высота к ширине. Ориентир — около 1.45." },
+    { n: "Нижняя треть", v: Math.round(r4 * 100) + "%", s: closeness(r4, 0.33, 0.06), w: .12, t: "От основания носа до подбородка. Ориентир — около трети высоты." },
+    { n: "Ширина рта", v: r5.toFixed(2), s: closeness(r5, 1.0, 0.2), w: .10, t: "К расстоянию между зрачками. Ориентир — около 1.0." }
+  ];
+  const total = metrics.reduce((x, m) => x + m.s * m.w, 0);
+  const score = Math.min(10, Math.max(1, 1 + 9 * Math.pow(total, 0.75)));
+  const verdict = score >= 8.5 ? "Пропорции почти как в учебнике"
+    : score >= 7 ? "Очень гармоничные пропорции"
+    : score >= 5.5 ? "Хорошие пропорции, есть свои особенности"
+    : score >= 4 ? "Необычные пропорции — или неудачный ракурс"
+    : "Скорее всего, мешает ракурс — попробуй ещё раз";
+  const yaw = Math.abs(NT.x - (FL.x + FR.x) / 2) / faceW;
+  const warn = yaw > 0.06 ? "Голова повёрнута — это сильно занижает оценку. Для честного результата снимай строго в анфас, камера на уровне глаз." : null;
+
+  return { score, verdict, metrics, warn,
+    keys: [eL, eR, P[I.noseBase], mL, mR, P[I.top], P[I.chin], fL, fR],
+    lines: [[P[I.top], P[I.chin]], [eL, eR], [mL, mR], [fL, fR]] };
+}
+
+function render(canvas, P, r) {
+  $("score").innerHTML = r.score.toFixed(1) + "<small> /10</small>";
+  $("verdict").textContent = r.verdict;
+  const w = $("warn"); w.textContent = r.warn || ""; w.classList.toggle("hidden", !r.warn);
+  $("metrics").innerHTML = r.metrics.map(m => `
+    <div class="m">
+      <div class="mh"><b>${m.n}</b><span>${m.v} · ${(m.s * 10).toFixed(1)}</span></div>
+      <div class="bar"><i style="width:${Math.max(4, m.s * 100)}%"></i></div>
+      <div class="mn">${m.t}</div>
+    </div>`).join("");
+
+  const cv = $("cv"); cv.width = canvas.width; cv.height = canvas.height;
+  const x = cv.getContext("2d");
+  x.drawImage(canvas, 0, 0);
+  const u = Math.max(1, cv.width / 400);
+  x.fillStyle = "rgba(255,255,255,.35)";
+  for (const p of P.slice(0, 468)) { x.beginPath(); x.arc(p.x, p.y, u * 0.9, 0, 7); x.fill(); }
+  x.strokeStyle = "rgba(255,255,255,.65)"; x.lineWidth = u * 1.5; x.setLineDash([u * 8, u * 6]);
+  for (const [a, b] of r.lines) { x.beginPath(); x.moveTo(a.x, a.y); x.lineTo(b.x, b.y); x.stroke(); }
+  x.setLineDash([]);
+  for (const p of r.keys) {
+    x.beginPath(); x.arc(p.x, p.y, u * 4.5, 0, 7); x.fillStyle = "#000"; x.fill();
+    x.beginPath(); x.arc(p.x, p.y, u * 3.2, 0, 7); x.fillStyle = "#7cd6c4"; x.fill();
+  }
+  show("result");
+}
+</script>
+</body>
+</html>
